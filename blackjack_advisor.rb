@@ -50,9 +50,21 @@ pair = {2 => {}, 3 => {}, 4 => {}, 5 => {}, 6 => {}, 7 => {10 => "Stand"},
 # Changes some data if 2 or 4+ decks are being used.
 puts "How many decks are you playing with? 1, 2, or 4+"
 decks = gets.chomp
-if decks == "2"
+if decks != "1"
   [5,6].each {|n| hard[8][n] = "Hit"
-elsif decks == "4+"
+  soft[13][4] = "Hit"
+  soft[14][4] = "Hit"
+  soft[17][2] = "Hit"
+  soft[18][11] = "Hit"
+  soft[19][6] = "Stand"
+  pair[3][8] = "Hit"
+  pair[4][4] = "Hit"
+  pair[7][10] = "Hit"
+end
+if decks == "4+"
+  hard[9][2] = "Hit"
+  pair[6][7] = "Hit"
+  pair[7][8] = "Hit"
 
 end
 
