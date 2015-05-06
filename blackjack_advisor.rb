@@ -63,19 +63,38 @@ end
 
 # Main Program
 
-  puts "Please enter your first card:"
-  first_card = get_card
-  puts "Please enter your second card:"
-  second_card = get_card
-  puts "Please enter the dealer's card:"
-  dealers_card = get_card
+puts "Please enter your first card:"
+first_card = get_card
+puts "Please enter your second card:"
+second_card = get_card
+puts "Please enter the dealer's card:"
+dealers_card = get_card
+total = first_card + second_card
 
-  if first_card == second_card
-    optimal_move = pair[first_card][dealers_card]
+if first_card == second_card
+  optimal_move = pair[first_card][dealers_card]
+elsif first_card != 11 && second_card != 11
+  optimal_move = hard[total][dealers_card]
+else
+  optimal_move = soft[total][dealers_card]
+end
+puts "Your optimal move is to #{optimal_move}"
+
+while optimal_move == "Hit" || optimal_move == "Double if possible, otherwise Hit"
+  puts "Would you like to continue?"
+  answer = gets.chomp
+  break if answer.capitalize.start_with?("N")
+  puts "What card did you get?"
+  next_card = get_card
+  if next_card != 11 && first_card != 11 && second_card != 11
+    total =  total + next_card
+    optimal_move = hard[total][dealers_card]
   elsif first_card != 11 && second_card != 11
-    optimal_move = hard[first_card + second_card][dealers_card]
+    total = total + next_card
+    optimal_move = soft[total][dealers_card]
   else
-    optimal_move = soft[first_card + second_card][dealers_card]
+    total += 2
+    optimal_move = soft[total][dealers_card]
   end
   puts "Your optimal move is to #{optimal_move}"
-  
+end
