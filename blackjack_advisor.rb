@@ -3,7 +3,7 @@ hard = {8 => {},9 => {}, 10 => {}, 11 => "Double if possible, otherwise Hit",
   12 => {}, 13 => {}, 14 => {}, 15 => {}, 16 => {},
   }
 
-  (5..7).each {|n| hard[n] = "Hit"}
+  (5..7).each {|n| hard[n] = Hash.new("Hit")}
   ((2..4).to_a + (7..11).to_a).each {|n| hard[8][n] = "Hit"}
   (5..6).each {|n| hard[8][n] = "Double if possible, otherwise Hit"}
   (2..6).each {|n| hard[9][n] = "Double if possible, otherwise Hit"}
@@ -14,7 +14,7 @@ hard = {8 => {},9 => {}, 10 => {}, 11 => "Double if possible, otherwise Hit",
   (4..6).each {|n| hard[12][n] = "Stand"}
   (13..16).each{|n| (2..6).each {|a| hard[n][a] = "Stand"}}
   (13..16).each{|n| (7..11).each {|a| hard[n][a] = "Hit"}} ##woo!!
-  (17..21).each {|n| hard[n] = "Stand"}
+  (17..21).each {|n| hard[n] = Hash.new("Stand")}
 
 soft = {13 => {}, 14 => {}, 15 => {}, 16 => {}, 17 => {}, 18 => {},
   19 => {6 => "Double if possible, otherwise Stand"}, 20 => {}, 21 => {}
@@ -28,7 +28,7 @@ soft = {13 => {}, 14 => {}, 15 => {}, 16 => {}, 17 => {}, 18 => {},
   (3..6).each {|n| soft[18][n] = "Double if possible, otherwise Hit"}
   [9,10].each {|n| soft[18][n] = "Hit"}
   ((2..5).to_a + (7..11).to_a).each {|n| soft[19][n] = "Stand"}
-  [20, 21].each {|n| soft[n] = "Stand"}
+  [20, 21].each {|n| soft[n] = Hash.new("Stand")}
 
 
 pair = {2 => {}, 3 => {}, 4 => {}, 5 => {}, 6 => {}, 7 => {10 => "Stand"},
@@ -46,6 +46,15 @@ pair = {2 => {}, 3 => {}, 4 => {}, 5 => {}, 6 => {}, 7 => {10 => "Stand"},
   [9,11].each {|n| pair[7][n] = "Hit"}
   ((2..6).to_a + [8,9]).each {|n| pair[9][n] = "Split"}
   [7,10,11].each {|n| pair[9][n] = "Stand"}
+
+# Changes some data if 2 or 4+ decks are being used.
+puts "How many decks are you playing with? 1, 2, or 4+"
+decks = gets.chomp
+if decks == "2"
+  [5,6].each {|n| hard[8][n] = "Hit"
+elsif decks == "4+"
+
+end
 
 # Turns each card into a number
 def get_card
@@ -80,20 +89,20 @@ else
 end
 puts "Your optimal move is to #{optimal_move}"
 
+# The program will only continue if Hit was recommended and the user did not bust so wishes to continue.
 while optimal_move == "Hit" || optimal_move == "Double if possible, otherwise Hit"
   puts "Would you like to continue?"
   answer = gets.chomp
   break if answer.capitalize.start_with?("N")
   puts "What card did you get?"
   next_card = get_card
+  total = total + next_card
   if next_card != 11 && first_card != 11 && second_card != 11
-    total =  total + next_card
     optimal_move = hard[total][dealers_card]
   elsif first_card != 11 && second_card != 11
-    total = total + next_card
     optimal_move = soft[total][dealers_card]
   else
-    total += 2
+    total -= 9
     optimal_move = soft[total][dealers_card]
   end
   puts "Your optimal move is to #{optimal_move}"
