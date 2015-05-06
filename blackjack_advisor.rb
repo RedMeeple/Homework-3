@@ -62,19 +62,20 @@ end
 
 
 # Main Program
-puts "Please enter your first card:"
-first_card = get_card
-puts "Please enter your second card:"
-second_card = get_card
-puts "Please enter the dealer's card:"
-dealers_card = get_card
 
-if first_card == second_card
-  optimal_move = pair[first_card][dealers_card]
-end
+  puts "Please enter your first card:"
+  first_card = get_card
+  puts "Please enter your second card:"
+  second_card = get_card
+  puts "Please enter the dealer's card:"
+  dealers_card = get_card
 
-
-
-
-
-puts "Your optimal move is to #{optimal_move}"
+  if first_card == second_card
+    optimal_move = pair[first_card][dealers_card]
+  elsif first_card != 11 && second_card != 11
+    optimal_move = hard[first_card + second_card][dealers_card]
+  else
+    optimal_move = soft[first_card + second_card][dealers_card]
+  end
+  puts "Your optimal move is to #{optimal_move}"
+  
