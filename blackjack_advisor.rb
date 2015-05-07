@@ -51,7 +51,7 @@ pair = {2 => {}, 3 => {}, 4 => {}, 5 => {}, 6 => {}, 7 => {10 => "Stand"},
 puts "How many decks are you playing with? 1, 2, or 4+"
 decks = gets.chomp
 if decks != "1"
-  [5,6].each {|n| hard[8][n] = "Hit"
+  [5,6].each {|n| hard[8][n] = "Hit" }
   soft[13][4] = "Hit"
   soft[14][4] = "Hit"
   soft[17][2] = "Hit"
@@ -70,11 +70,11 @@ end
 
 # Turns each card into a number
 def get_card
-  tens = ["10", "j", "q", "k"]
-  card = gets.chomp
-  if tens.include? card.downcase
+  tens = ["10", "j", "q", "k", "jack", "queen", "king"]
+  card = gets.chomp.downcase
+  if tens.include? card
     return 10
-  elsif card == "a" || card == "A"
+  elsif card == "a"
     return 11
   else
     return card.to_i
@@ -101,7 +101,8 @@ else
 end
 puts "Your optimal move is to #{optimal_move}"
 
-# The program will only continue if Hit was recommended and the user did not bust so wishes to continue.
+# The program will only continue if Hit was recommended and the user did not
+# bust so wishes to continue.
 while optimal_move == "Hit" || optimal_move == "Double if possible, otherwise Hit"
   puts "Would you like to continue?"
   answer = gets.chomp
@@ -109,13 +110,22 @@ while optimal_move == "Hit" || optimal_move == "Double if possible, otherwise Hi
   puts "What card did you get?"
   next_card = get_card
   total = total + next_card
-  if next_card != 11 && first_card != 11 && second_card != 11
-    optimal_move = hard[total][dealers_card]
-  elsif first_card != 11 && second_card != 11
-    optimal_move = soft[total][dealers_card]
+  if first_card != 11 && second_card != 11
+    if next_card != 11
+      optimal_move = hard[total][dealers_card]
+    elsif total > 21
+      total -= 10
+      optimal_move = hard[total][dealers_card]
+    else
+      optimal_move = soft[total][dealers_card]
+    end
   else
-    total -= 9
-    optimal_move = soft[total][dealers_card]
+    if total > 21
+      total -= 10
+      next_card == 11 ? optimal_move = soft[total][dealers_card] : optimal_move = hard[total][dealers_card]
+    else
+      optimal_move = soft[total][dealers_card]
+    end
   end
   puts "Your optimal move is to #{optimal_move}"
 end
